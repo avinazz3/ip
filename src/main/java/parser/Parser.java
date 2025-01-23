@@ -23,6 +23,8 @@ public class Parser {
                     return new UnmarkCommand(getIndex(input));
                 case "bye":
                     return new ExitCommand();
+                case "delete":
+                    return new DeleteCommand(getIndex(input));
                 default:
                     throw new BabeException("I don't understand this command. Please try again!");
             }
