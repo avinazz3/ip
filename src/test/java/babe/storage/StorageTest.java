@@ -59,17 +59,17 @@ public class StorageTest {
         assertEquals(3, loadedTasks.size());
 
         // Verify Todo
-        assertTrue(loadedTasks.get(0) instanceof Todo);
+        assertInstanceOf(Todo.class, loadedTasks.get(0));
         assertTrue(loadedTasks.get(0).isDone());
         assertEquals("buy milk", loadedTasks.get(0).getDescription());
 
         // Verify Deadline
-        assertTrue(loadedTasks.get(1) instanceof Deadline);
+        assertInstanceOf(Deadline.class, loadedTasks.get(1));
         assertEquals("submit report", loadedTasks.get(1).getDescription());
         assertEquals(deadline, ((Deadline) loadedTasks.get(1)).getBy());
 
         // Verify Event
-        assertTrue(loadedTasks.get(2) instanceof Event);
+        assertInstanceOf(Event.class, loadedTasks.get(2));
         assertEquals("team meeting", loadedTasks.get(2).getDescription());
         assertEquals(eventStart, ((Event) loadedTasks.get(2)).getStart());
         assertEquals(eventEnd, ((Event) loadedTasks.get(2)).getEnd());
