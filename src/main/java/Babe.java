@@ -1,7 +1,6 @@
 import command.Command;
 import command.ExitCommand;
 import exception.BabeException;
-import exception.BabeException;
 import parser.Parser;
 import task.TaskList;
 import ui.Ui;
