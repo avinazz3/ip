@@ -30,6 +30,7 @@ public class Parser {
                 case "unmark" -> new UnmarkCommand(getIndex(input));
                 case "bye" -> new ExitCommand();
                 case "delete" -> new DeleteCommand(getIndex(input));
+                case "find" -> new FindCommand(getSearchKeyword(input));
                 default -> throw new BabeException("I don't understand this babe.command. Please try again!");
             };
         } catch (StringIndexOutOfBoundsException e) {
@@ -44,6 +45,17 @@ public class Parser {
      * @return A Todo task object.
      * @throws BabeException If the description is empty or invalid.
      */
+    private static String getSearchKeyword(String input) throws BabeException {
+        if (input.equals("find")) {
+            throw new BabeException("Please provide a search keyword!");
+        }
+        String keyword = input.substring(5).trim();
+        if (keyword.isEmpty()) {
+            throw new BabeException("Please provide a search keyword!");
+        }
+        return keyword;
+    }
+
     private static Task createTodo(String input) throws BabeException {
         if (input.equals("todo")) {
             throw new BabeException("The description of a todo cannot be empty!");
