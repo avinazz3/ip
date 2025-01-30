@@ -10,16 +10,34 @@ public class Deadline extends Task {
     private static final DateTimeFormatter STORAGE_FORMAT =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
 
+    /**
+     * Constructs a Deadline task with a description and due date.
+     *
+     * @param description The description of the deadline task.
+     * @param by The due date and time of the deadline.
+     */
     public Deadline(String description, LocalDateTime by) {
         super(description);
         this.by = by;
     }
 
+    /**
+     * Constructs a Deadline task with a description, due date, and completion status.
+     *
+     * @param description The description of the deadline task.
+     * @param by The due date and time of the deadline.
+     * @param isDone Whether the deadline task is completed.
+     */
     public Deadline(String description, LocalDateTime by, boolean isDone) {
         super(description, isDone);
         this.by = by;
     }
 
+    /**
+     * Returns the due date and time of the deadline.
+     *
+     * @return The due date as a LocalDateTime object.
+     */
     public LocalDateTime getBy() {
         return by;
     }
@@ -29,10 +47,20 @@ public class Deadline extends Task {
         return "[D]" + super.toString() + " (by: " + by.format(DISPLAY_FORMAT) + ")";
     }
 
+    /**
+     * Returns the due date formatted for storage purposes.
+     *
+     * @return The due date as a formatted string.
+     */
     public String getStorageString() {
         return by.format(STORAGE_FORMAT);
     }
 
+    /**
+     * Creates and returns a copy of this Deadline task.
+     *
+     * @return A new Deadline object with the same properties.
+     */
     @Override
     public Deadline copy() {
         return new Deadline(this.description, this.by, this.isDone);

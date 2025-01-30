@@ -24,6 +24,12 @@ public class Storage {
         this.filePath = Paths.get(filePath);
     }
 
+    /**
+     * Loads tasks from the storage file.
+     *
+     * @return An ArrayList of tasks loaded from the file.
+     * @throws BabeException If an error occurs while loading data.
+     */
     public ArrayList<Task> load() throws BabeException {
         try {
             createDirectoryIfNotExists();
@@ -37,6 +43,11 @@ public class Storage {
         }
     }
 
+    /**
+     * Creates the necessary directories if they do not exist.
+     *
+     * @throws IOException If an error occurs while creating directories.
+     */
     private void createDirectoryIfNotExists() throws IOException {
         Path directory = filePath.getParent();
         if (directory != null && Files.notExists(directory)) {
@@ -44,6 +55,12 @@ public class Storage {
         }
     }
 
+    /**
+     * Reads the task data from the storage file and converts it into task objects.
+     *
+     * @return An ArrayList of tasks parsed from the file.
+     * @throws BabeException If an error occurs while reading or parsing the file.
+     */
     private ArrayList<Task> loadFromFile() throws BabeException {
         ArrayList<Task> tasks = new ArrayList<>();
         try (Scanner scanner = new Scanner(filePath)) {
@@ -59,6 +76,12 @@ public class Storage {
         }
     }
 
+    /**
+     * Saves the given list of tasks to the storage file.
+     *
+     * @param tasks The list of tasks to be saved.
+     * @throws BabeException If an error occurs while writing to the file.
+     */
     public void save(ArrayList<Task> tasks) throws BabeException {
         try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
             for (Task task : tasks) {
@@ -70,6 +93,13 @@ public class Storage {
         }
     }
 
+    /**
+     * Parses a task from a stored string format.
+     *
+     * @param line The string representing a stored task.
+     * @return The corresponding Task object.
+     * @throws BabeException If the format is invalid or data is missing.
+     */
     private Task parseTask(String line) throws BabeException {
         try {
             String[] parts = line.split("\\|");
@@ -103,10 +133,23 @@ public class Storage {
         }
     }
 
+    /**
+     * Parses a date-time string into a LocalDateTime object.
+     *
+     * @param dateTimeStr The date-time string to parse.
+     * @return A LocalDateTime object representing the parsed date and time.
+     * @throws DateTimeParseException If the date format is incorrect.
+     */
     private LocalDateTime parseDateTime(String dateTimeStr) throws DateTimeParseException {
         return LocalDateTime.parse(dateTimeStr, DATE_FORMATTER);
     }
 
+    /**
+     * Formats a task into a string representation for storage.
+     *
+     * @param task The task to be formatted.
+     * @return A formatted string representation of the task.
+     */
     private String formatTask(Task task) {
         StringBuilder builder = new StringBuilder();
 

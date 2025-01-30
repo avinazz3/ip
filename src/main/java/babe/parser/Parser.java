@@ -11,6 +11,13 @@ public class Parser {
     private static final DateTimeFormatter INPUT_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
 
+    /**
+     * Parses the user input and returns the corresponding command.
+     *
+     * @param input The user input string.
+     * @return The corresponding Command object.
+     * @throws BabeException If the input command format is invalid.
+     */
     public static Command parseCommand(String input) throws BabeException {
         try {
             String commandType = getCommandType(input);
@@ -30,6 +37,13 @@ public class Parser {
         }
     }
 
+    /**
+     * Creates a Todo task from the user input.
+     *
+     * @param input The user input string containing the todo description.
+     * @return A Todo task object.
+     * @throws BabeException If the description is empty or invalid.
+     */
     private static Task createTodo(String input) throws BabeException {
         if (input.equals("todo")) {
             throw new BabeException("The description of a todo cannot be empty!");
@@ -41,6 +55,13 @@ public class Parser {
         return new Todo(description);
     }
 
+    /**
+     * Creates a Deadline task from the user input.
+     *
+     * @param input The user input string containing the deadline description and due date.
+     * @return A Deadline task object.
+     * @throws BabeException If the description, deadline, or format is invalid.
+     */
     static Task createDeadline(String input) throws BabeException {
         if (input.equals("deadline")) {
             throw new BabeException("The description of a deadline cannot be empty!");
@@ -66,6 +87,13 @@ public class Parser {
         }
     }
 
+    /**
+     * Creates an Event task from the user input.
+     *
+     * @param input The user input string containing the event description, start, and end time.
+     * @return An Event task object.
+     * @throws BabeException If the description, start time, end time, or format is invalid.
+     */
     private static Task createEvent(String input) throws BabeException {
         if (input.equals("event")) {
             throw new BabeException("The description of an event cannot be empty!");
@@ -99,6 +127,13 @@ public class Parser {
         }
     }
 
+    /**
+     * Extracts the task index from the user input.
+     *
+     * @param input The user input string containing the command and task index.
+     * @return The zero-based index of the task.
+     * @throws BabeException If the input format is invalid or the index is not a number.
+     */
     private static int getIndex(String input) throws BabeException {
         try {
             String[] parts = input.split(" ");
@@ -111,6 +146,12 @@ public class Parser {
         }
     }
 
+    /**
+     * Extracts the command type from the user input.
+     *
+     * @param input The user input string.
+     * @return The command type as a lowercase string.
+     */
     private static String getCommandType(String input) {
         String[] parts = input.split(" ");
         return parts[0].toLowerCase();

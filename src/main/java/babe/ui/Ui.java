@@ -26,10 +26,20 @@ public class Ui {
         showGreeting();
     }
 
+    /**
+     * Reads a command from the user input.
+     *
+     * @return The command entered by the user.
+     */
     public String readCommand() {
         return scanner.nextLine();
     }
 
+    /**
+     * Displays the list of tasks.
+     *
+     * @param taskList The TaskList containing the tasks to be displayed.
+     */
     public void showList(TaskList taskList) {
         if (taskList.size() == 0) {
             System.out.println("     Your babe.task list is empty!");
@@ -42,23 +52,45 @@ public class Ui {
         }
     }
 
+    /**
+     * Displays a message indicating that a task has been added.
+     *
+     * @param task The task that was added.
+     * @param totalTasks The total number of tasks after adding the new task.
+     */
     public void showAddedTask(Task task, int totalTasks) {
         System.out.println("     Got it. I've added this babe.task:");
         System.out.println("       " + task);
         System.out.println("     Now you have " + totalTasks + " tasks in the list.");
     }
 
+    /**
+     * Displays a message indicating that a task has been deleted.
+     *
+     * @param task The task that was removed.
+     * @param remainingTasks The total number of tasks remaining after deletion.
+     */
     public void showDeletedTask(Task task, int remainingTasks) {
         System.out.println("     Noted. I've removed this babe.task:");
         System.out.println("       " + task);
         System.out.println("     Now you have " + remainingTasks + " tasks in the list.");
     }
 
+    /**
+     * Displays a message indicating that a task has been marked as done.
+     *
+     * @param task The task that was marked as done.
+     */
     public void showMarkedTask(Task task) {
         System.out.println("     Nice! I've marked this babe.task as done:");
         System.out.println("       " + task);
     }
 
+    /**
+     * Displays a message indicating that a task has been marked as not done.
+     *
+     * @param task The task that was marked as not done.
+     */
     public void showUnmarkedTask(Task task) {
         System.out.println("     OK, I've marked this babe.task as not done yet:");
         System.out.println("       " + task);
