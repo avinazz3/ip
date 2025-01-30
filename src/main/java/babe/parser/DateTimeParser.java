@@ -1,4 +1,4 @@
-package parser;
+package babe.parser;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -6,7 +6,7 @@ import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.List;
 
-import exception.BabeException;
+import babe.exception.BabeException;
 
 public class DateTimeParser {
     private static final List<DateTimeFormatter> INPUT_FORMATTERS = Arrays.asList(
@@ -45,7 +45,7 @@ public class DateTimeParser {
     }
 
     /**
-     * Formats a LocalDateTime for storage
+     * Formats a LocalDateTime for babe.storage
      */
     public static String format(LocalDateTime dateTime) {
         return dateTime.format(STORAGE_FORMATTER);

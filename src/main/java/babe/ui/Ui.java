@@ -1,9 +1,9 @@
-package ui;
+package babe.ui;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-import task.Task;
-import task.TaskList;
+import babe.task.Task;
+import babe.task.TaskList;
 
 
 public class Ui {
@@ -32,7 +32,7 @@ public class Ui {
 
     public void showList(TaskList taskList) {
         if (taskList.size() == 0) {
-            System.out.println("     Your task list is empty!");
+            System.out.println("     Your babe.task list is empty!");
             return;
         }
         System.out.println("     Here are the tasks in your list:");
@@ -43,24 +43,24 @@ public class Ui {
     }
 
     public void showAddedTask(Task task, int totalTasks) {
-        System.out.println("     Got it. I've added this task:");
+        System.out.println("     Got it. I've added this babe.task:");
         System.out.println("       " + task);
         System.out.println("     Now you have " + totalTasks + " tasks in the list.");
     }
 
     public void showDeletedTask(Task task, int remainingTasks) {
-        System.out.println("     Noted. I've removed this task:");
+        System.out.println("     Noted. I've removed this babe.task:");
         System.out.println("       " + task);
         System.out.println("     Now you have " + remainingTasks + " tasks in the list.");
     }
 
     public void showMarkedTask(Task task) {
-        System.out.println("     Nice! I've marked this task as done:");
+        System.out.println("     Nice! I've marked this babe.task as done:");
         System.out.println("       " + task);
     }
 
     public void showUnmarkedTask(Task task) {
-        System.out.println("     OK, I've marked this task as not done yet:");
+        System.out.println("     OK, I've marked this babe.task as not done yet:");
         System.out.println("       " + task);
     }
 
@@ -70,7 +70,7 @@ public class Ui {
 
     public void showGreeting() {
         System.out.println(DIVIDER);
-        System.out.println("     Hello! I'm Babe");
+        System.out.println("     Hello! I'm babe.Babe");
         System.out.println("     What can I do for you?");
         System.out.println(DIVIDER);
         System.out.println();

@@ -1,8 +1,8 @@
-package parser;
+package babe.parser;
 
-import command.*;
-import task.*;
-import exception.BabeException;
+import babe.command.*;
+import babe.task.*;
+import babe.exception.BabeException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -23,10 +23,10 @@ public class Parser {
                 case "unmark" -> new UnmarkCommand(getIndex(input));
                 case "bye" -> new ExitCommand();
                 case "delete" -> new DeleteCommand(getIndex(input));
-                default -> throw new BabeException("I don't understand this command. Please try again!");
+                default -> throw new BabeException("I don't understand this babe.command. Please try again!");
             };
         } catch (StringIndexOutOfBoundsException e) {
-            throw new BabeException("The command format is incorrect!");
+            throw new BabeException("The babe.command format is incorrect!");
         }
     }
 
@@ -103,11 +103,11 @@ public class Parser {
         try {
             String[] parts = input.split(" ");
             if (parts.length != 2) {
-                throw new BabeException("Please provide a task number!");
+                throw new BabeException("Please provide a babe.task number!");
             }
             return Integer.parseInt(parts[1]) - 1; // Convert to 0-based index
         } catch (NumberFormatException e) {
-            throw new BabeException("Please provide a valid task number!");
+            throw new BabeException("Please provide a valid babe.task number!");
         }
     }
 

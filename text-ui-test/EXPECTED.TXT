@@ -6,12 +6,12 @@ Hello from
 |____/ \__,_|_.__/ \___|
 
     ____________________________________________________________
-     Hello! I'm Babe
+     Hello! I'm babe.Babe
      What can I do for you?
     ____________________________________________________________
 
     ____________________________________________________________
-     Got it. I've added this task:
+     Got it. I've added this babe.task:
        [T][ ] read book
      Now you have 1 tasks in the list.
     ____________________________________________________________
@@ -22,7 +22,7 @@ Hello from
     ____________________________________________________________
 
     ____________________________________________________________
-     Got it. I've added this task:
+     Got it. I've added this babe.task:
        [D][ ] submit assignment (by: Friday)
      Now you have 2 tasks in the list.
     ____________________________________________________________
@@ -34,7 +34,7 @@ Hello from
     ____________________________________________________________
 
     ____________________________________________________________
-     Got it. I've added this task:
+     Got it. I've added this babe.task:
        [E][ ] team meeting (from: Monday 2pm to: Monday 4pm)
      Now you have 3 tasks in the list.
     ____________________________________________________________
@@ -47,7 +47,7 @@ Hello from
     ____________________________________________________________
 
     ____________________________________________________________
-     Nice! I've marked this task as done:
+     Nice! I've marked this babe.task as done:
        [D][X] submit assignment (by: Friday)
     ____________________________________________________________
 
@@ -59,7 +59,7 @@ Hello from
     ____________________________________________________________
 
     ____________________________________________________________
-     OK, I've marked this task as not done yet:
+     OK, I've marked this babe.task as not done yet:
        [D][ ] submit assignment (by: Friday)
     ____________________________________________________________
 

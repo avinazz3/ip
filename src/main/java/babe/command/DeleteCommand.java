@@ -1,9 +1,9 @@
-package command;
+package babe.command;
 
-import task.Task;
-import task.TaskList;
-import ui.Ui;
-import exception.BabeException;
+import babe.task.Task;
+import babe.task.TaskList;
+import babe.ui.Ui;
+import babe.exception.BabeException;
 
 public class DeleteCommand implements Command {
     private int targetIndex;

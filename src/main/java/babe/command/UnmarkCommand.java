@@ -1,8 +1,8 @@
-package command;
-import task.Task;
-import task.TaskList;
-import ui.Ui;
-import exception.BabeException;
+package babe.command;
+import babe.task.Task;
+import babe.task.TaskList;
+import babe.ui.Ui;
+import babe.exception.BabeException;
 
 public class UnmarkCommand implements Command {
     private int targetIndex;

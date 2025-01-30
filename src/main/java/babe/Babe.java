@@ -1,9 +1,11 @@
-import command.Command;
-import command.ExitCommand;
-import exception.BabeException;
-import parser.Parser;
-import task.TaskList;
-import ui.Ui;
+package babe;
+
+import babe.command.Command;
+import babe.command.ExitCommand;
+import babe.exception.BabeException;
+import babe.parser.Parser;
+import babe.task.TaskList;
+import babe.ui.Ui;
 
 public class Babe {
     private TaskList tasks;

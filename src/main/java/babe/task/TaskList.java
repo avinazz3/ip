@@ -1,8 +1,8 @@
-package task;
+package babe.task;
 
 import java.util.ArrayList;
-import exception.*;
-import storage.Storage;
+import babe.exception.*;
+import babe.storage.Storage;
 
 public class TaskList {
     private ArrayList<Task> tasks;
@@ -55,7 +55,7 @@ public class TaskList {
 
     private void validateIndex(int index) throws BabeException {
         if (index < 0 || index >= tasks.size()) {
-            throw new BabeException("Please provide a valid task number between 1 and " + tasks.size() + "!");
+            throw new BabeException("Please provide a valid babe.task number between 1 and " + tasks.size() + "!");
         }
     }
 

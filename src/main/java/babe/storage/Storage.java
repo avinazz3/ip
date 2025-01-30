@@ -1,7 +1,7 @@
-package storage;
+package babe.storage;
 
-import task.*;
-import exception.BabeException;
+import babe.task.*;
+import babe.exception.BabeException;
 import java.io.*;
 import java.nio.file.*;
 import java.time.LocalDateTime;
@@ -74,7 +74,7 @@ public class Storage {
         try {
             String[] parts = line.split("\\|");
             if (parts.length < 3) {
-                throw new BabeException("Invalid task format: " + line);
+                throw new BabeException("Invalid babe.task format: " + line);
             }
 
             String type = parts[0].trim();
@@ -94,12 +94,12 @@ public class Storage {
                     LocalDateTime end = parseDateTime(parts[4].trim());
                     yield new Event(description, start, end, isDone);
                 }
-                default -> throw new BabeException("Unknown task type: " + type);
+                default -> throw new BabeException("Unknown babe.task type: " + type);
             };
         } catch (DateTimeParseException e) {
             throw new BabeException("Invalid date format. Please use format: YYYY-MM-DD HHMM");
         } catch (Exception e) {
-            throw new BabeException("Error parsing task: " + e.getMessage());
+            throw new BabeException("Error parsing babe.task: " + e.getMessage());
         }
     }
 
