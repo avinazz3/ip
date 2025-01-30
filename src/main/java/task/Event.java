@@ -1,43 +1,49 @@
 package task;
 
-public class Event extends Task {
-    protected String start;
-    protected String end;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-    /**
-     * Creates a new event task
-     */
-    public Event(String description, String start, String end) {
+public class Event extends Task {
+    private LocalDateTime start;
+    private LocalDateTime end;
+    private static final DateTimeFormatter DISPLAY_FORMAT =
+            DateTimeFormatter.ofPattern("MMM d yyyy, hh:mm a");
+    private static final DateTimeFormatter STORAGE_FORMAT =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+
+    public Event(String description, LocalDateTime start, LocalDateTime end) {
         super(description);
         this.start = start;
         this.end = end;
     }
 
-    /**
-     * Creates an event task with the given completion status
-     * Used when loading tasks from storage
-     */
-    public Event(String description, String start, String end, boolean isDone) {
+    public Event(String description, LocalDateTime start, LocalDateTime end, boolean isDone) {
         super(description, isDone);
         this.start = start;
         this.end = end;
     }
 
-    /**
-     * Gets the event start time
-     * Used by storage to save event details
-     */
-    public String getStart() {
+    public LocalDateTime getStart() {
         return start;
     }
 
-    public String getEnd() {
+    public LocalDateTime getEnd() {
         return end;
     }
 
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (from: " + start + " to: " + end + ")";
+        return "[E]" + super.toString() + " (from: " +
+                start.format(DISPLAY_FORMAT) + " to: " +
+                end.format(DISPLAY_FORMAT) + ")";
+    }
+
+    public String getStorageStartString() {
+        return start.format(STORAGE_FORMAT);
+    }
+
+    public String getStorageEndString() {
+        return end.format(STORAGE_FORMAT);
     }
 
     @Override

@@ -13,7 +13,7 @@ public class AddCommand implements Command {
     }
 
     @Override
-    public void execute(TaskList tasks, Ui ui) {
+    public void execute(TaskList tasks, Ui ui) throws BabeException {
         tasks.addTask(task);
         ui.showAddedTask(task, tasks.size());
     }

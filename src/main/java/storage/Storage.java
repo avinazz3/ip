@@ -4,12 +4,17 @@ import task.*;
 import exception.BabeException;
 import java.io.*;
 import java.nio.file.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Storage {
     private static final String DEFAULT_STORAGE_FILEPATH = "./data/tasks.txt";
     private final Path filePath;
+    private static final DateTimeFormatter DATE_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
 
     public Storage() {
         this(DEFAULT_STORAGE_FILEPATH);
@@ -80,17 +85,26 @@ public class Storage {
                 case "T" -> new Todo(description, isDone);
                 case "D" -> {
                     if (parts.length < 4) throw new BabeException("Invalid deadline format");
-                    yield new Deadline(description, parts[3].trim(), isDone);
+                    LocalDateTime by = parseDateTime(parts[3].trim());
+                    yield new Deadline(description, by, isDone);
                 }
                 case "E" -> {
                     if (parts.length < 5) throw new BabeException("Invalid event format");
-                    yield new Event(description, parts[3].trim(), parts[4].trim(), isDone);
+                    LocalDateTime start = parseDateTime(parts[3].trim());
+                    LocalDateTime end = parseDateTime(parts[4].trim());
+                    yield new Event(description, start, end, isDone);
                 }
                 default -> throw new BabeException("Unknown task type: " + type);
             };
+        } catch (DateTimeParseException e) {
+            throw new BabeException("Invalid date format. Please use format: YYYY-MM-DD HHMM");
         } catch (Exception e) {
             throw new BabeException("Error parsing task: " + e.getMessage());
         }
+    }
+
+    private LocalDateTime parseDateTime(String dateTimeStr) throws DateTimeParseException {
+        return LocalDateTime.parse(dateTimeStr, DATE_FORMATTER);
     }
 
     private String formatTask(Task task) {
@@ -108,10 +122,11 @@ public class Storage {
         builder.append(" | ").append(task.getDescription());
 
         // Add date/time for Deadline and Event
-        if (task instanceof Deadline) {
-            builder.append(" | ").append(((Deadline) task).getBy());
-        } else if (task instanceof Event) {
-            builder.append(" | ").append(((Event) task).getStart());
+        if (task instanceof Deadline deadline) {
+            builder.append(" | ").append(deadline.getBy().format(DATE_FORMATTER));
+        } else if (task instanceof Event event) {
+            builder.append(" | ").append(event.getStart().format(DATE_FORMATTER))
+                    .append(" | ").append(event.getEnd().format(DATE_FORMATTER));
         }
 
         return builder.toString();
