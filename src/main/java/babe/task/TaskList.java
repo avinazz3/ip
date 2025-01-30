@@ -62,4 +62,20 @@ public class TaskList {
     private void saveTaskList() throws BabeException {
         storage.save(tasks);
     }
+
+    /**
+     * Searches for tasks whose descriptions contain the specified keyword (case-insensitive).
+     *
+     * @param keyword the search term to look for in task descriptions
+     * @return an ArrayList of Task objects whose descriptions contain the keyword
+     */
+    public ArrayList<Task> findTasks(String keyword) {
+        ArrayList<Task> matchingTasks = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
+                matchingTasks.add(task);
+            }
+        }
+        return matchingTasks;
+    }
 }
