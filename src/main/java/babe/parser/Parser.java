@@ -41,7 +41,7 @@ public class Parser {
         return new Todo(description);
     }
 
-    private static Task createDeadline(String input) throws BabeException {
+    static Task createDeadline(String input) throws BabeException {
         if (input.equals("deadline")) {
             throw new BabeException("The description of a deadline cannot be empty!");
         }
