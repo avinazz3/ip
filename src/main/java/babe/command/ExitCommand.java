@@ -5,7 +5,7 @@ import babe.ui.Ui;
 
 public class ExitCommand implements Command {
     @Override
-    public void execute(TaskList tasks, Ui ui) {
-        ui.showExit();
+    public String execute(TaskList tasks, Ui ui) {
+        return ui.getExitMessage();
     }
 }

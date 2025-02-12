@@ -26,8 +26,8 @@ public class DeleteCommand implements Command {
      * @throws BabeException If the provided index is out of range.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui) throws BabeException {
+    public String execute(TaskList tasks, Ui ui) throws BabeException {
         Task deletedTask = tasks.deleteTask(targetIndex - 1); // Convert to 0-based index
-        ui.showDeletedTask(deletedTask, tasks.size());
+        return ui.getDeletedTaskMessage(deletedTask, tasks.size());
     }
 }

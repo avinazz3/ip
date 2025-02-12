@@ -18,15 +18,16 @@ public class AddCommand implements Command {
     }
 
     /**
-     * Executes the command by adding the task to the task list and displaying a confirmation message.
+     * Executes the command by adding the task to the task list and returning a confirmation message.
      *
      * @param tasks The task list to which the task will be added.
-     * @param ui The UI handler for displaying messages.
+     * @param ui The UI handler for formatting messages.
+     * @return A string containing the result of adding the task.
      * @throws BabeException If an error occurs while adding the task.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui) throws BabeException {
+    public String execute(TaskList tasks, Ui ui) throws BabeException {
         tasks.addTask(task);
-        ui.showAddedTask(task, tasks.size());
+        return ui.getAddedTaskMessage(task, tasks.size());
     }
 }
