@@ -6,12 +6,18 @@ import babe.exception.BabeException;
 import babe.parser.Parser;
 import babe.task.TaskList;
 import babe.ui.Ui;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import java.io.IOException;
 
 /**
  * The main entry point for the babe task management application.
  * This class is responsible for handling user interactions, processing commands, and managing the task list.
  */
-public class Babe {
+public class Babe extends Application {
     private TaskList tasks;
     private Ui ui;
 
@@ -20,40 +26,61 @@ public class Babe {
         tasks = new TaskList();
     }
 
-    /**
-     * Starts the application and enters the main command loop.
-     * The loop continuously waits for user input, processes commands, and updates the UI accordingly.
-     */
-    public void run() {
-        ui.showWelcome();
-        boolean isExit = false;
+    @Override
+    public void start(Stage stage) {
+        try {
+            // Load FXML
+            FXMLLoader fxmlLoader = new FXMLLoader(Babe.class.getResource("/view/MainWindow.fxml"));
+            AnchorPane ap = fxmlLoader.load();
 
-        while (!isExit) {
-            try {
-                ui.showLine();
-                String fullCommand = ui.readCommand();
-                ui.showLine();
+            // Set up the scene
+            Scene scene = new Scene(ap);
+            stage.setScene(scene);
+            stage.setTitle("Babe Task Manager");
 
-                Command c = Parser.parseCommand(fullCommand);
-                c.execute(tasks, ui);
-                isExit = (c instanceof ExitCommand);
+            // Get the controller and set up Babe instance
+            MainWindow mainWindow = fxmlLoader.getController();
+            mainWindow.setBabe(this);
 
-                if (!isExit) {
-                    System.out.println();
-                }
-            } catch (BabeException e) {
-                ui.showError(e.getMessage());
-                System.out.println();
-            }
+            // Show the window
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     /**
-     * The entry point for the application. Creates a new Babe instance and runs it.
-     *
-     * @param args Command line arguments (not used).
+     * Gets the UI instance
      */
-    public static void main(String[] args) {
-        new Babe().run();
-    } //A-MoreOOP
+    public Ui getUi() {
+        return ui;
+    }
+
+    /**
+     * Processes a command and returns the response
+     *
+     * @param input The command input from the user
+     * @return The response string to be displayed
+     */
+    public String getResponse(String input) {
+        try {
+            StringBuilder response = new StringBuilder();
+            response.append(ui.getDivider()).append("\n");
+            response.append("> ").append(input).append("\n");
+            response.append(ui.getDivider()).append("\n");
+
+            Command c = Parser.parseCommand(input);
+            String result = c.execute(tasks, ui);
+            response.append(result);
+
+            if (c instanceof ExitCommand) {
+                response.append("\n").append(ui.getExitMessage());
+                System.exit(0);
+            }
+
+            return response.toString();
+        } catch (BabeException e) {
+            return ui.getErrorMessage(e.getMessage());
+        }
+    }
 }

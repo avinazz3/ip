@@ -19,6 +19,7 @@ public class Parser {
      * @throws BabeException If the input command format is invalid.
      */
     public static Command parseCommand(String input) throws BabeException {
+        assert input != null : "Input string cannot be null"; // Ensure input is not null
         try {
             String commandType = getCommandType(input);
             return switch (commandType) {
@@ -46,6 +47,7 @@ public class Parser {
      * @throws BabeException If the description is empty or invalid.
      */
     private static String getSearchKeyword(String input) throws BabeException {
+        assert input != null : "Input string cannot be null"; // Ensure input is not null
         if (input.equals("find")) {
             throw new BabeException("Please provide a search keyword!");
         }
@@ -53,10 +55,12 @@ public class Parser {
         if (keyword.isEmpty()) {
             throw new BabeException("Please provide a search keyword!");
         }
+        assert !keyword.isEmpty() : "Keyword should not be empty after trimming"; // Ensure keyword is not empty
         return keyword;
     }
 
     private static Task createTodo(String input) throws BabeException {
+        assert input != null : "Input string cannot be null"; // Ensure input is not null
         if (input.equals("todo")) {
             throw new BabeException("The description of a todo cannot be empty!");
         }
@@ -64,6 +68,7 @@ public class Parser {
         if (description.isEmpty()) {
             throw new BabeException("The description of a todo cannot be empty!");
         }
+        assert !description.isEmpty() : "Description should not be empty after trimming"; // Ensure description is not empty
         return new Todo(description);
     }
 
@@ -75,6 +80,7 @@ public class Parser {
      * @throws BabeException If the description, deadline, or format is invalid.
      */
     static Task createDeadline(String input) throws BabeException {
+        assert input != null : "Input string cannot be null"; // Ensure input is not null
         if (input.equals("deadline")) {
             throw new BabeException("The description of a deadline cannot be empty!");
         }
@@ -90,6 +96,7 @@ public class Parser {
         if (description.isEmpty() || byStr.isEmpty()) {
             throw new BabeException("The description and deadline cannot be empty!");
         }
+        assert !description.isEmpty() && !byStr.isEmpty() : "Description and deadline should not be empty"; // Ensure both are not empty
         try {
             LocalDateTime by = LocalDateTime.parse(byStr, INPUT_FORMATTER);
             return new Deadline(description, by);
@@ -107,6 +114,7 @@ public class Parser {
      * @throws BabeException If the description, start time, end time, or format is invalid.
      */
     private static Task createEvent(String input) throws BabeException {
+        assert input != null : "Input string cannot be null"; // Ensure input is not null
         if (input.equals("event")) {
             throw new BabeException("The description of an event cannot be empty!");
         }
@@ -123,6 +131,7 @@ public class Parser {
         if (description.isEmpty() || startStr.isEmpty() || endStr.isEmpty()) {
             throw new BabeException("The description, start time, and end time cannot be empty!");
         }
+        assert !description.isEmpty() && !startStr.isEmpty() && !endStr.isEmpty() : "Description, start time, and end time should not be empty"; // Ensure all are not empty
 
         try {
             LocalDateTime start = LocalDateTime.parse(startStr, INPUT_FORMATTER);
@@ -147,12 +156,15 @@ public class Parser {
      * @throws BabeException If the input format is invalid or the index is not a number.
      */
     private static int getIndex(String input) throws BabeException {
+        assert input != null : "Input string cannot be null"; // Ensure input is not null
         try {
             String[] parts = input.split(" ");
             if (parts.length != 2) {
                 throw new BabeException("Please provide a babe.task number!");
             }
-            return Integer.parseInt(parts[1]) - 1; // Convert to 0-based index
+            int index = Integer.parseInt(parts[1]) - 1; // Convert to 0-based index
+            assert index >= 0 : "Task index should be non-negative"; // Ensure index is valid
+            return index;
         } catch (NumberFormatException e) {
             throw new BabeException("Please provide a valid babe.task number!");
         }
@@ -165,6 +177,7 @@ public class Parser {
      * @return The command type as a lowercase string.
      */
     private static String getCommandType(String input) {
+        assert input != null : "Input string cannot be null"; // Ensure input is not null
         String[] parts = input.split(" ");
         return parts[0].toLowerCase();
     }

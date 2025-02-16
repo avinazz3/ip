@@ -1,20 +1,13 @@
 package babe.ui;
 
-import java.util.ArrayList;
-import java.util.Scanner;
 import babe.task.Task;
 import babe.task.TaskList;
-
+import java.util.ArrayList;
 
 public class Ui {
-    private Scanner scanner;
-    private static final String DIVIDER = "    ____________________________________________________________";
+    private static final String DIVIDER = "____________________________________________________________";
 
-    public Ui() {
-        scanner = new Scanner(System.in);
-    }
-
-    public void showWelcome() {
+    public String getWelcomeMessage() {
         String logo = """
                  ____        _         \s
                 | __ )  __ _| |__   ___\s
@@ -22,100 +15,113 @@ public class Ui {
                 | |_) | (_| | |_) |  __/
                 |____/ \\__,_|_.__/ \\___|
                 """;
-        System.out.println("Hello from\n" + logo);
-        showGreeting();
+        return "Hello from\n" + logo + "\n" + getGreetingMessage();
     }
 
     /**
-     * Reads a command from the user input.
-     *
-     * @return The command entered by the user.
-     */
-    public String readCommand() {
-        return scanner.nextLine();
-    }
-
-    /**
-     * Displays the list of tasks.
+     * Returns the string representation of the task list.
      *
      * @param taskList The TaskList containing the tasks to be displayed.
+     * @return A formatted string containing the task list.
      */
-    public void showList(TaskList taskList) {
+    public String getListView(TaskList taskList) {
         if (taskList.size() == 0) {
-            System.out.println("     Your babe.task list is empty!");
-            return;
+            return "Your task list is empty!";
         }
-        System.out.println("     Here are the tasks in your list:");
+
+        StringBuilder sb = new StringBuilder("Here are the tasks in your list:\n");
         ArrayList<Task> tasks = taskList.getTasks();
         for (int i = 0; i < tasks.size(); i++) {
-            System.out.println("     " + (i + 1) + "." + tasks.get(i));
+            sb.append(String.format("%d.%s\n", (i + 1), tasks.get(i)));
         }
+        return sb.toString();
     }
 
     /**
-     * Displays a message indicating that a task has been added.
+     * Returns a message indicating that a task has been added.
      *
      * @param task The task that was added.
      * @param totalTasks The total number of tasks after adding the new task.
+     * @return A formatted string containing the add confirmation message.
      */
-    public void showAddedTask(Task task, int totalTasks) {
-        System.out.println("     Got it. I've added this babe.task:");
-        System.out.println("       " + task);
-        System.out.println("     Now you have " + totalTasks + " tasks in the list.");
+    public String getAddedTaskMessage(Task task, int totalTasks) {
+        return String.format("Got it. I've added this task:\n" +
+                "  %s\n" +
+                "Now you have %d tasks in the list.", task, totalTasks);
     }
 
     /**
-     * Displays a message indicating that a task has been deleted.
+     * Returns a message indicating that a task has been deleted.
      *
      * @param task The task that was removed.
      * @param remainingTasks The total number of tasks remaining after deletion.
+     * @return A formatted string containing the delete confirmation message.
      */
-    public void showDeletedTask(Task task, int remainingTasks) {
-        System.out.println("     Noted. I've removed this babe.task:");
-        System.out.println("       " + task);
-        System.out.println("     Now you have " + remainingTasks + " tasks in the list.");
+    public String getDeletedTaskMessage(Task task, int remainingTasks) {
+        return String.format("Noted. I've removed this task:\n" +
+                "  %s\n" +
+                "Now you have %d tasks in the list.", task, remainingTasks);
     }
 
     /**
-     * Displays a message indicating that a task has been marked as done.
+     * Returns a message indicating that a task has been marked as done.
      *
      * @param task The task that was marked as done.
+     * @return A formatted string containing the mark-as-done confirmation message.
      */
-    public void showMarkedTask(Task task) {
-        System.out.println("     Nice! I've marked this babe.task as done:");
-        System.out.println("       " + task);
+    public String getMarkedTaskMessage(Task task) {
+        return String.format("Nice! I've marked this task as done:\n  %s", task);
     }
 
     /**
-     * Displays a message indicating that a task has been marked as not done.
+     * Returns a message indicating that a task has been marked as not done.
      *
      * @param task The task that was marked as not done.
+     * @return A formatted string containing the mark-as-not-done confirmation message.
      */
-    public void showUnmarkedTask(Task task) {
-        System.out.println("     OK, I've marked this babe.task as not done yet:");
-        System.out.println("       " + task);
+    public String getUnmarkedTaskMessage(Task task) {
+        return String.format("OK, I've marked this task as not done yet:\n  %s", task);
     }
 
-    public void showError(String message) {
-        System.out.println("     ERROR: " + message);
+    /**
+     * Returns an error message.
+     *
+     * @param message The error message to be displayed.
+     * @return A formatted string containing the error message.
+     */
+    public String getErrorMessage(String message) {
+        return "ERROR: " + message;
     }
 
-    public void showGreeting() {
-        System.out.println(DIVIDER);
-        System.out.println("     Hello! I'm babe.Babe");
-        System.out.println("     What can I do for you?");
-        System.out.println(DIVIDER);
-        System.out.println();
+    /**
+     * Returns the greeting message.
+     *
+     * @return A formatted string containing the greeting message.
+     */
+    public String getGreetingMessage() {
+        return DIVIDER + "\n" +
+                "Hello! I'm Babe\n" +
+                "What can I do for you?\n" +
+                DIVIDER;
     }
 
-    public void showExit() {
-        System.out.println(DIVIDER);
-        System.out.println("     Bye. Hope to see you again soon!");
-        System.out.println(DIVIDER);
-        System.out.println();
+    /**
+     * Returns the exit message.
+     *
+     * @return A formatted string containing the exit message.
+     */
+    public String getExitMessage() {
+        return DIVIDER + "\n" +
+                "Bye. Hope to see you again soon!\n" +
+                DIVIDER;
     }
 
-    public void showLine() {
-        System.out.println(DIVIDER);
+    /**
+     * Returns the divider line.
+     *
+     * @return The divider line string.
+     */
+    public String getDivider() {
+        return DIVIDER;
     }
 }
