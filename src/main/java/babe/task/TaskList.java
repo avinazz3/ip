@@ -25,6 +25,12 @@ public class TaskList {
         assert tasks != null : "Tasks list must be initialized";
     }
 
+    /**
+     * Adds a task to the list and saves the updated task list.
+     *
+     * @param task The task to be added.
+     * @throws BabeException If an error occurs while saving the task list.
+     */
     public void addTask(Task task) throws BabeException {
         assert task != null : "Cannot add null task";
         int oldSize = tasks.size();
@@ -34,6 +40,13 @@ public class TaskList {
         saveTaskList();
     }
 
+    /**
+     * Retrieves a task from the list based on its index.
+     *
+     * @param index The index of the task.
+     * @return The task at the specified index.
+     * @throws BabeException If the index is out of bounds.
+     */
     public Task getTask(int index) throws BabeException {
         validateIndex(index);
         Task task = tasks.get(index);
@@ -41,6 +54,13 @@ public class TaskList {
         return task;
     }
 
+    /**
+     * Deletes a task from the list based on its index and saves the updated task list.
+     *
+     * @param index The index of the task to delete.
+     * @return The deleted task.
+     * @throws BabeException If the index is out of bounds or an error occurs while saving.
+     */
     public Task deleteTask(int index) throws BabeException {
         validateIndex(index);
         int oldSize = tasks.size();
@@ -52,6 +72,12 @@ public class TaskList {
         return deletedTask;
     }
 
+    /**
+     * Marks a task as done based on its index and saves the updated task list.
+     *
+     * @param index The index of the task to mark as done.
+     * @throws BabeException If the index is out of bounds or an error occurs while saving.
+     */
     public void markTaskAsDone(int index) throws BabeException {
         validateIndex(index);
         Task task = tasks.get(index);
@@ -61,11 +87,21 @@ public class TaskList {
         saveTaskList();
     }
 
+    /**
+     * Returns the number of tasks in the list.
+     *
+     * @return The number of tasks.
+     */
     public int size() {
         assert tasks != null : "Tasks list cannot be null";
         return tasks.size();
     }
 
+    /**
+     * Returns a copy of the current list of tasks.
+     *
+     * @return A new ArrayList containing the tasks.
+     */
     public ArrayList<Task> getTasks() {
         assert tasks != null : "Tasks list cannot be null";
         ArrayList<Task> tasksCopy = new ArrayList<>(tasks);
@@ -73,6 +109,12 @@ public class TaskList {
         return tasksCopy;
     }
 
+    /**
+     * Validates that the given index is within the valid range of task indices.
+     *
+     * @param index The index to validate.
+     * @throws BabeException If the index is out of bounds.
+     */
     private void validateIndex(int index) throws BabeException {
         assert tasks != null : "Tasks list cannot be null during index validation";
         if (index < 0 || index >= tasks.size()) {
@@ -86,6 +128,12 @@ public class TaskList {
         storage.save(tasks);
     }
 
+    /**
+     * Searches for tasks whose descriptions contain the specified keyword (case-insensitive).
+     *
+     * @param keyword the search term to look for in task descriptions
+     * @return an ArrayList of Task objects whose descriptions contain the keyword
+     */
     public ArrayList<Task> findTasks(String keyword) {
         assert keyword != null : "Search keyword cannot be null";
         assert tasks != null : "Tasks list cannot be null during search";
