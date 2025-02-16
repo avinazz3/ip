@@ -12,9 +12,10 @@ import java.util.Scanner;
 
 public class Storage {
     private static final String DEFAULT_STORAGE_FILEPATH = "./data/tasks.txt";
-    private final Path filePath;
     private static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+
+    private final Path filePath;
 
     public Storage() {
         this(DEFAULT_STORAGE_FILEPATH);
@@ -103,33 +104,83 @@ public class Storage {
     private Task parseTask(String line) throws BabeException {
         try {
             String[] parts = line.split("\\|");
-            if (parts.length < 3) {
-                throw new BabeException("Invalid babe.task format: " + line);
-            }
+            validateTaskParts(parts, line);
 
             String type = parts[0].trim();
             boolean isDone = "1".equals(parts[1].trim());
             String description = parts[2].trim();
 
-            return switch (type) {
-                case "T" -> new Todo(description, isDone);
-                case "D" -> {
-                    if (parts.length < 4) throw new BabeException("Invalid deadline format");
-                    LocalDateTime by = parseDateTime(parts[3].trim());
-                    yield new Deadline(description, by, isDone);
-                }
-                case "E" -> {
-                    if (parts.length < 5) throw new BabeException("Invalid event format");
-                    LocalDateTime start = parseDateTime(parts[3].trim());
-                    LocalDateTime end = parseDateTime(parts[4].trim());
-                    yield new Event(description, start, end, isDone);
-                }
-                default -> throw new BabeException("Unknown babe.task type: " + type);
-            };
+            return createTaskFromParts(type, isDone, description, parts);
         } catch (DateTimeParseException e) {
             throw new BabeException("Invalid date format. Please use format: YYYY-MM-DD HHMM");
         } catch (Exception e) {
-            throw new BabeException("Error parsing babe.task: " + e.getMessage());
+            throw new BabeException("Error parsing task: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Validates the parts of a task string.
+     *
+     * @param parts The parts of the task string.
+     * @param line  The original task string for error reporting.
+     * @throws BabeException If the task format is invalid.
+     */
+    private void validateTaskParts(String[] parts, String line) throws BabeException {
+        if (parts.length < 3) {
+            throw new BabeException("Invalid task format: " + line);
+        }
+    }
+
+    /**
+     * Creates a task from the parsed parts.
+     *
+     * @param type        The type of the task (T, D, E).
+     * @param isDone      Whether the task is done.
+     * @param description The description of the task.
+     * @param parts       The parts of the task string.
+     * @return The corresponding Task object.
+     * @throws BabeException If the task type is unknown or data is missing.
+     */
+    private Task createTaskFromParts(String type, boolean isDone, String description, String[] parts)
+            throws BabeException {
+        switch (type) {
+        case "T":
+            return new Todo(description, isDone);
+        case "D":
+            validateDeadlineParts(parts);
+            LocalDateTime by = parseDateTime(parts[3].trim());
+            return new Deadline(description, by, isDone);
+        case "E":
+            validateEventParts(parts);
+            LocalDateTime start = parseDateTime(parts[3].trim());
+            LocalDateTime end = parseDateTime(parts[4].trim());
+            return new Event(description, start, end, isDone);
+        default:
+            throw new BabeException("Unknown task type: " + type);
+        }
+    }
+
+    /**
+     * Validates the parts of a deadline task.
+     *
+     * @param parts The parts of the task string.
+     * @throws BabeException If the deadline format is invalid.
+     */
+    private void validateDeadlineParts(String[] parts) throws BabeException {
+        if (parts.length < 4) {
+            throw new BabeException("Invalid deadline format");
+        }
+    }
+
+    /**
+     * Validates the parts of an event task.
+     *
+     * @param parts The parts of the task string.
+     * @throws BabeException If the event format is invalid.
+     */
+    private void validateEventParts(String[] parts) throws BabeException {
+        if (parts.length < 5) {
+            throw new BabeException("Invalid event format");
         }
     }
 
@@ -154,9 +205,13 @@ public class Storage {
         StringBuilder builder = new StringBuilder();
 
         // Add type
-        if (task instanceof Todo) builder.append("T");
-        else if (task instanceof Deadline) builder.append("D");
-        else if (task instanceof Event) builder.append("E");
+        if (task instanceof Todo) {
+            builder.append("T");
+        } else if (task instanceof Deadline) {
+            builder.append("D");
+        } else if (task instanceof Event) {
+            builder.append("E");
+        }
 
         // Add completion status
         builder.append(" | ").append(task.isDone() ? "1" : "0");
