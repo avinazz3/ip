@@ -13,13 +13,16 @@ public class TaskList {
     }
 
     public TaskList(Storage storage) {
+        assert storage != null : "Storage cannot be null";
         this.storage = storage;
         try {
             tasks = new ArrayList<>(storage.load());
+            assert tasks != null : "Tasks list cannot be null after loading";
         } catch (BabeException e) {
             System.out.println("Could not load saved tasks: " + e.getMessage());
             tasks = new ArrayList<>();
         }
+        assert tasks != null : "Tasks list must be initialized";
     }
 
     /**
@@ -29,7 +32,11 @@ public class TaskList {
      * @throws BabeException If an error occurs while saving the task list.
      */
     public void addTask(Task task) throws BabeException {
+        assert task != null : "Cannot add null task";
+        int oldSize = tasks.size();
         tasks.add(task);
+        assert tasks.size() == oldSize + 1 : "Task list size should increase by 1";
+        assert tasks.contains(task) : "Added task should be in the list";
         saveTaskList();
     }
 
@@ -42,7 +49,9 @@ public class TaskList {
      */
     public Task getTask(int index) throws BabeException {
         validateIndex(index);
-        return tasks.get(index);
+        Task task = tasks.get(index);
+        assert task != null : "Retrieved task cannot be null";
+        return task;
     }
 
     /**
@@ -54,7 +63,11 @@ public class TaskList {
      */
     public Task deleteTask(int index) throws BabeException {
         validateIndex(index);
+        int oldSize = tasks.size();
         Task deletedTask = tasks.remove(index);
+        assert tasks.size() == oldSize - 1 : "Task list size should decrease by 1";
+        assert !tasks.contains(deletedTask) : "Deleted task should not be in the list";
+        assert deletedTask != null : "Deleted task cannot be null";
         saveTaskList();
         return deletedTask;
     }
@@ -67,7 +80,10 @@ public class TaskList {
      */
     public void markTaskAsDone(int index) throws BabeException {
         validateIndex(index);
-        tasks.get(index).markAsDone();
+        Task task = tasks.get(index);
+        assert task != null : "Task to mark as done cannot be null";
+        task.markAsDone();
+        assert task.isDone() : "Task should be marked as done";
         saveTaskList();
     }
 
@@ -77,6 +93,7 @@ public class TaskList {
      * @return The number of tasks.
      */
     public int size() {
+        assert tasks != null : "Tasks list cannot be null";
         return tasks.size();
     }
 
@@ -86,7 +103,10 @@ public class TaskList {
      * @return A new ArrayList containing the tasks.
      */
     public ArrayList<Task> getTasks() {
-        return new ArrayList<>(tasks); // Return a copy to prevent external modifications
+        assert tasks != null : "Tasks list cannot be null";
+        ArrayList<Task> tasksCopy = new ArrayList<>(tasks);
+        assert tasksCopy.size() == tasks.size() : "Copy should have same size as original";
+        return tasksCopy;
     }
 
     /**
@@ -96,12 +116,15 @@ public class TaskList {
      * @throws BabeException If the index is out of bounds.
      */
     private void validateIndex(int index) throws BabeException {
+        assert tasks != null : "Tasks list cannot be null during index validation";
         if (index < 0 || index >= tasks.size()) {
             throw new BabeException("Please provide a valid babe.task number between 1 and " + tasks.size() + "!");
         }
     }
 
     private void saveTaskList() throws BabeException {
+        assert tasks != null : "Cannot save null task list";
+        assert storage != null : "Storage cannot be null during save";
         storage.save(tasks);
     }
 
@@ -112,12 +135,17 @@ public class TaskList {
      * @return an ArrayList of Task objects whose descriptions contain the keyword
      */
     public ArrayList<Task> findTasks(String keyword) {
+        assert keyword != null : "Search keyword cannot be null";
+        assert tasks != null : "Tasks list cannot be null during search";
+
         ArrayList<Task> matchingTasks = new ArrayList<>();
         for (Task task : tasks) {
+            assert task != null : "Individual task in list cannot be null";
             if (task.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
                 matchingTasks.add(task);
             }
         }
+        assert matchingTasks != null : "Matching tasks list cannot be null";
         return matchingTasks;
     }
 }
