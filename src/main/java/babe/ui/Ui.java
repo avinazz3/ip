@@ -124,4 +124,14 @@ public class Ui {
     public String getDivider() {
         return DIVIDER;
     }
+
+    /**
+     * Returns a message indicating that a task's priority has been updated.
+     *
+     * @param task The task whose priority was updated.
+     * @return A formatted string containing the priority update confirmation message.
+     */
+    public String getUpdatedPriorityMessage(Task task) {
+        return String.format("Noted. I've updated the priority of this task:\n  %s", task);
+    }
 }

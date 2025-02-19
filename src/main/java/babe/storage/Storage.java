@@ -96,6 +96,7 @@ public class Storage {
 
     /**
      * Parses a task from a stored string format.
+     * Format: TYPE | DONE | PRIORITY | DESCRIPTION | [DATETIME...]
      *
      * @param line The string representing a stored task.
      * @return The corresponding Task object.
@@ -108,13 +109,30 @@ public class Storage {
 
             String type = parts[0].trim();
             boolean isDone = "1".equals(parts[1].trim());
-            String description = parts[2].trim();
+            Task.Priority priority = parsePriority(parts[2].trim());
+            String description = parts[3].trim();
 
-            return createTaskFromParts(type, isDone, description, parts);
+            return createTaskFromParts(type, isDone, priority, description, parts);
         } catch (DateTimeParseException e) {
             throw new BabeException("Invalid date format. Please use format: YYYY-MM-DD HHMM");
         } catch (Exception e) {
             throw new BabeException("Error parsing task: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Parses a priority level from string.
+     *
+     * @param priorityStr The priority string to parse.
+     * @return The corresponding Priority enum value.
+     * @throws BabeException If the priority format is invalid.
+     */
+    private Task.Priority parsePriority(String priorityStr) throws BabeException {
+        try {
+            int level = Integer.parseInt(priorityStr);
+            return Task.Priority.fromLevel(level);
+        } catch (NumberFormatException | IllegalArgumentException e) {
+            throw new BabeException("Invalid priority level: " + priorityStr);
         }
     }
 
@@ -126,7 +144,7 @@ public class Storage {
      * @throws BabeException If the task format is invalid.
      */
     private void validateTaskParts(String[] parts, String line) throws BabeException {
-        if (parts.length < 3) {
+        if (parts.length < 4) {  // Now need at least 4 parts (type, done, priority, description)
             throw new BabeException("Invalid task format: " + line);
         }
     }
@@ -136,27 +154,28 @@ public class Storage {
      *
      * @param type        The type of the task (T, D, E).
      * @param isDone      Whether the task is done.
+     * @param priority    The priority level of the task.
      * @param description The description of the task.
      * @param parts       The parts of the task string.
      * @return The corresponding Task object.
      * @throws BabeException If the task type is unknown or data is missing.
      */
-    private Task createTaskFromParts(String type, boolean isDone, String description, String[] parts)
-            throws BabeException {
+    private Task createTaskFromParts(String type, boolean isDone, Task.Priority priority,
+                                     String description, String[] parts) throws BabeException {
         switch (type) {
-        case "T":
-            return new Todo(description, isDone);
-        case "D":
-            validateDeadlineParts(parts);
-            LocalDateTime by = parseDateTime(parts[3].trim());
-            return new Deadline(description, by, isDone);
-        case "E":
-            validateEventParts(parts);
-            LocalDateTime start = parseDateTime(parts[3].trim());
-            LocalDateTime end = parseDateTime(parts[4].trim());
-            return new Event(description, start, end, isDone);
-        default:
-            throw new BabeException("Unknown task type: " + type);
+            case "T":
+                return new Todo(description, isDone, priority);
+            case "D":
+                validateDeadlineParts(parts);
+                LocalDateTime by = parseDateTime(parts[4].trim());
+                return new Deadline(description, by, isDone, priority);
+            case "E":
+                validateEventParts(parts);
+                LocalDateTime start = parseDateTime(parts[4].trim());
+                LocalDateTime end = parseDateTime(parts[5].trim());
+                return new Event(description, start, end, isDone, priority);
+            default:
+                throw new BabeException("Unknown task type: " + type);
         }
     }
 
@@ -167,7 +186,7 @@ public class Storage {
      * @throws BabeException If the deadline format is invalid.
      */
     private void validateDeadlineParts(String[] parts) throws BabeException {
-        if (parts.length < 4) {
+        if (parts.length < 5) {  // Need 5 parts for deadline (including datetime)
             throw new BabeException("Invalid deadline format");
         }
     }
@@ -179,7 +198,7 @@ public class Storage {
      * @throws BabeException If the event format is invalid.
      */
     private void validateEventParts(String[] parts) throws BabeException {
-        if (parts.length < 5) {
+        if (parts.length < 6) {  // Need 6 parts for event (including start and end times)
             throw new BabeException("Invalid event format");
         }
     }
@@ -197,6 +216,7 @@ public class Storage {
 
     /**
      * Formats a task into a string representation for storage.
+     * Format: TYPE | DONE | PRIORITY | DESCRIPTION | [DATETIME...]
      *
      * @param task The task to be formatted.
      * @return A formatted string representation of the task.
@@ -215,6 +235,9 @@ public class Storage {
 
         // Add completion status
         builder.append(" | ").append(task.isDone() ? "1" : "0");
+
+        // Add priority
+        builder.append(" | ").append(task.getPriority().getLevel());
 
         // Add description
         builder.append(" | ").append(task.getDescription());
