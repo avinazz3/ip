@@ -7,9 +7,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 
-/**
- * Controller for MainWindow. Provides the layout for the other controls.
- */
 public class MainWindow {
     @FXML
     private ScrollPane scrollPane;
@@ -21,38 +18,41 @@ public class MainWindow {
     private Button sendButton;
 
     private Babe babe;
-    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/user.jpg"));
-    private Image babeImage = new Image(this.getClass().getResourceAsStream("/images/babe.png"));
+    private final Image userImage = new Image(this.getClass().getResourceAsStream("/images/user.jpg"));
+    private final Image babeImage = new Image(this.getClass().getResourceAsStream("/images/babe.png"));
 
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        dialogContainer.prefWidthProperty().bind(scrollPane.widthProperty().subtract(20));
+        userInput.setOnAction(event -> handleUserInput());
+        userInput.requestFocus();
     }
 
     public void setBabe(Babe babe) {
         this.babe = babe;
-        // Move the welcome message setup here
-        dialogContainer.getChildren().addAll(
+        dialogContainer.getChildren().add(
                 DialogBox.getBabeDialog(babe.getUi().getWelcomeMessage(), babeImage)
         );
     }
 
-    /**
-     * Creates two dialog boxes, one echoing user input and the other containing Duke's reply and then appends them to
-     * the dialog container. Clears the user input after processing.
-     */
     @FXML
     private void handleUserInput() {
-        String input = userInput.getText();
+        String input = userInput.getText().trim();
         if (input.isEmpty()) {
             return;
         }
 
-        dialogContainer.getChildren().add(DialogBox.getUserDialog(input, userImage));
+        dialogContainer.getChildren().add(
+                DialogBox.getUserDialog(input, userImage)
+        );
 
         String response = babe.getResponse(input);
-        dialogContainer.getChildren().add(DialogBox.getBabeDialog(response, babeImage));
+        DialogBox responseBox = response.startsWith("ERROR:")
+                ? DialogBox.getBabeErrorDialog(response, babeImage)
+                : DialogBox.getBabeDialog(response, babeImage);
 
+        dialogContainer.getChildren().add(responseBox);
         userInput.clear();
     }
 }
