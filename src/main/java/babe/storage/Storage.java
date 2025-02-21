@@ -131,7 +131,7 @@ public class Storage {
         try {
             int level = Integer.parseInt(priorityStr);
             return Task.Priority.fromLevel(level);
-        } catch (NumberFormatException | IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             throw new BabeException("Invalid priority level: " + priorityStr);
         }
     }
