@@ -20,7 +20,7 @@ All tasks can be assigned a priority level from 1 to 3:
 
 ### Command Format
 
-<task_type> <task_description> /p <priority_number> 
+- <task_type> <task_description> /p <priority_number> 
 
 ### Examples
 
