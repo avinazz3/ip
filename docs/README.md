@@ -25,13 +25,16 @@ All tasks can be assigned a priority level from 1 to 3:
 ### Examples
 
 1. Adding a deadline:
-- deadline Submit project proposal /p 1 /date 2025-03-01
+
+   deadline "Submit project proposal" /p 1 /date 2025-03-01
 
 2. Creating an event:
-- event Team meeting /p 2 /from 2025-02-22-14:00 /to2025-02-22-15:30
+
+   event "Team meeting" /p 2 /from 2025-02-22-14:00 /to 2025-02-22-15:30
 
 3. Adding a todo:
-- todo Buy groceries /p 3
+
+   todo "Buy groceries" /p 3
 
 ## Chat Window Features
 
@@ -53,4 +56,5 @@ Babe handles various error scenarios gracefully:
 - Task modification and deletion
 - Task completion tracking
 - Storing list between conversations
+- Task list viewing and filtering by keyword search
 

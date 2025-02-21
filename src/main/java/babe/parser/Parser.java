@@ -41,6 +41,18 @@ public class Parser {
     }
 
     /**
+     * Validates that a priority level is between 1 and 3.
+     *
+     * @param level The priority level to validate.
+     * @throws BabeException If the priority level is invalid.
+     */
+    private static void validatePriorityLevel(int level) throws BabeException {
+        if (level < 1 || level > 3) {
+            throw new BabeException("Priority level must be between 1 (High) and 3 (Low)!");
+        }
+    }
+
+    /**
      * Extracts the search keyword from the user input.
      *
      * @param input The user input string containing the search keyword.
@@ -80,8 +92,19 @@ public class Parser {
         assert !description.isEmpty() : "Description should not be empty after trimming"; // Ensure description is not empty
 
         // Handle priority if provided
-        Task.Priority priority = parts.length > 1 ?
-                Task.Priority.fromLevel(Integer.parseInt(parts[1])) : Task.Priority.MEDIUM;
+        Task.Priority priority;
+        try {
+            if (parts.length > 1) {
+                int priorityLevel = Integer.parseInt(parts[1].trim());
+                validatePriorityLevel(priorityLevel);
+                priority = Task.Priority.fromLevel(priorityLevel);
+            } else {
+                priority = Task.Priority.MEDIUM;
+            }
+        } catch (NumberFormatException e) {
+            throw new BabeException("Please provide a valid priority level (1-3)!");
+        }
+
         return new Todo(description, priority);
     }
 
@@ -109,8 +132,20 @@ public class Parser {
         String descriptionPart = mainParts[0].substring(9).trim();
         String[] descAndPriority = descriptionPart.split(" /p ");
         String description = descAndPriority[0].trim();
-        Task.Priority priority = descAndPriority.length > 1 ?
-                Task.Priority.fromLevel(Integer.parseInt(descAndPriority[1])) : Task.Priority.MEDIUM;
+
+        // Handle priority
+        Task.Priority priority;
+        try {
+            if (descAndPriority.length > 1) {
+                int priorityLevel = Integer.parseInt(descAndPriority[1].trim());
+                validatePriorityLevel(priorityLevel);
+                priority = Task.Priority.fromLevel(priorityLevel);
+            } else {
+                priority = Task.Priority.MEDIUM;
+            }
+        } catch (NumberFormatException e) {
+            throw new BabeException("Please provide a valid priority level (1-3)!");
+        }
 
         String byStr = mainParts[1].trim();
         if (description.isEmpty() || byStr.isEmpty()) {
@@ -151,8 +186,20 @@ public class Parser {
         String descriptionPart = timeParts[0].substring(6).trim();
         String[] descAndPriority = descriptionPart.split(" /p ");
         String description = descAndPriority[0].trim();
-        Task.Priority priority = descAndPriority.length > 1 ?
-                Task.Priority.fromLevel(Integer.parseInt(descAndPriority[1])) : Task.Priority.MEDIUM;
+
+        // Handle priority
+        Task.Priority priority;
+        try {
+            if (descAndPriority.length > 1) {
+                int priorityLevel = Integer.parseInt(descAndPriority[1].trim());
+                validatePriorityLevel(priorityLevel);
+                priority = Task.Priority.fromLevel(priorityLevel);
+            } else {
+                priority = Task.Priority.MEDIUM;
+            }
+        } catch (NumberFormatException e) {
+            throw new BabeException("Please provide a valid priority level (1-3)!");
+        }
 
         String startStr = timeParts[1].trim();
         String endStr = timeParts[2].trim();
@@ -215,9 +262,7 @@ public class Parser {
         }
         try {
             int level = Integer.parseInt(parts[2]);
-            if (level < 1 || level > 3) {
-                throw new BabeException("Priority level must be between 1 (High) and 3 (Low)!");
-            }
+            validatePriorityLevel(level);
             return level;
         } catch (NumberFormatException e) {
             throw new BabeException("Please provide a valid priority level (1-3)!");
