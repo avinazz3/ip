@@ -15,8 +15,8 @@ public class Event extends Task {
      * Constructs an Event task with a description, start time, and end time.
      *
      * @param description The description of the event.
-     * @param start The start time of the event.
-     * @param end The end time of the event.
+     * @param start       The start time of the event.
+     * @param end         The end time of the event.
      */
     public Event(String description, LocalDateTime start, LocalDateTime end) {
         super(description);
@@ -25,15 +25,44 @@ public class Event extends Task {
     }
 
     /**
+     * Constructs an Event task with a description, start time, end time, and priority.
+     *
+     * @param description The description of the event.
+     * @param start       The start time of the event.
+     * @param end         The end time of the event.
+     * @param priority    The priority level of the task.
+     */
+    public Event(String description, LocalDateTime start, LocalDateTime end, Priority priority) {
+        super(description, priority);
+        this.start = start;
+        this.end = end;
+    }
+
+    /**
      * Constructs an Event task with a description, start time, end time, and completion status.
      *
      * @param description The description of the event.
-     * @param start The start time of the event.
-     * @param end The end time of the event.
-     * @param isDone Whether the event is completed.
+     * @param start       The start time of the event.
+     * @param end         The end time of the event.
+     * @param isDone      Whether the event is completed.
      */
     public Event(String description, LocalDateTime start, LocalDateTime end, boolean isDone) {
         super(description, isDone);
+        this.start = start;
+        this.end = end;
+    }
+
+    /**
+     * Constructs an Event task with a description, start time, end time, completion status, and priority.
+     *
+     * @param description The description of the event.
+     * @param start       The start time of the event.
+     * @param end         The end time of the event.
+     * @param isDone      Whether the event is completed.
+     * @param priority    The priority level of the task.
+     */
+    public Event(String description, LocalDateTime start, LocalDateTime end, boolean isDone, Priority priority) {
+        super(description, isDone, priority);
         this.start = start;
         this.end = end;
     }
@@ -88,6 +117,6 @@ public class Event extends Task {
      */
     @Override
     public Event copy() {
-        return new Event(this.description, this.start, this.end, this.isDone);
+        return new Event(this.description, this.start, this.end, this.isDone, this.priority);
     }
 }

@@ -1,3 +1,4 @@
+// Deadline.java
 package babe.task;
 
 import java.time.LocalDateTime;
@@ -22,6 +23,18 @@ public class Deadline extends Task {
     }
 
     /**
+     * Constructs a Deadline task with a description, due date, and priority.
+     *
+     * @param description The description of the deadline task.
+     * @param by The due date and time of the deadline.
+     * @param priority The priority level of the task.
+     */
+    public Deadline(String description, LocalDateTime by, Priority priority) {
+        super(description, priority);
+        this.by = by;
+    }
+
+    /**
      * Constructs a Deadline task with a description, due date, and completion status.
      *
      * @param description The description of the deadline task.
@@ -30,6 +43,19 @@ public class Deadline extends Task {
      */
     public Deadline(String description, LocalDateTime by, boolean isDone) {
         super(description, isDone);
+        this.by = by;
+    }
+
+    /**
+     * Constructs a Deadline task with a description, due date, completion status, and priority.
+     *
+     * @param description The description of the deadline task.
+     * @param by The due date and time of the deadline.
+     * @param isDone Whether the deadline task is completed.
+     * @param priority The priority level of the task.
+     */
+    public Deadline(String description, LocalDateTime by, boolean isDone, Priority priority) {
+        super(description, isDone, priority);
         this.by = by;
     }
 
@@ -63,6 +89,6 @@ public class Deadline extends Task {
      */
     @Override
     public Deadline copy() {
-        return new Deadline(this.description, this.by, this.isDone);
+        return new Deadline(this.description, this.by, this.isDone, this.priority);
     }
 }

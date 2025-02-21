@@ -32,19 +32,20 @@ public class Parser {
                 case "bye" -> new ExitCommand();
                 case "delete" -> new DeleteCommand(getIndex(input));
                 case "find" -> new FindCommand(getSearchKeyword(input));
-                default -> throw new BabeException("I don't understand this babe.command. Please try again!");
+                case "priority" -> new SetPriorityCommand(getIndex(input), getPriorityLevel(input));
+                default -> throw new BabeException("I don't understand this command. Please try again!");
             };
         } catch (StringIndexOutOfBoundsException e) {
-            throw new BabeException("The babe.command format is incorrect!");
+            throw new BabeException("The command format is incorrect!");
         }
     }
 
     /**
-     * Creates a Todo task from the user input.
+     * Extracts the search keyword from the user input.
      *
-     * @param input The user input string containing the todo description.
-     * @return A Todo task object.
-     * @throws BabeException If the description is empty or invalid.
+     * @param input The user input string containing the search keyword.
+     * @return The search keyword.
+     * @throws BabeException If the keyword is empty or invalid.
      */
     private static String getSearchKeyword(String input) throws BabeException {
         assert input != null : "Input string cannot be null"; // Ensure input is not null
@@ -59,23 +60,35 @@ public class Parser {
         return keyword;
     }
 
+    /**
+     * Creates a Todo task from the user input.
+     *
+     * @param input The user input string containing the todo description and optional priority.
+     * @return A Todo task object.
+     * @throws BabeException If the description is empty or invalid.
+     */
     private static Task createTodo(String input) throws BabeException {
         assert input != null : "Input string cannot be null"; // Ensure input is not null
         if (input.equals("todo")) {
             throw new BabeException("The description of a todo cannot be empty!");
         }
-        String description = input.substring(5).trim();
+        String[] parts = input.substring(5).trim().split(" /p ");
+        String description = parts[0].trim();
         if (description.isEmpty()) {
             throw new BabeException("The description of a todo cannot be empty!");
         }
         assert !description.isEmpty() : "Description should not be empty after trimming"; // Ensure description is not empty
-        return new Todo(description);
+
+        // Handle priority if provided
+        Task.Priority priority = parts.length > 1 ?
+                Task.Priority.fromLevel(Integer.parseInt(parts[1])) : Task.Priority.MEDIUM;
+        return new Todo(description, priority);
     }
 
     /**
      * Creates a Deadline task from the user input.
      *
-     * @param input The user input string containing the deadline description and due date.
+     * @param input The user input string containing the deadline description, due date, and optional priority.
      * @return A Deadline task object.
      * @throws BabeException If the description, deadline, or format is invalid.
      */
@@ -87,19 +100,27 @@ public class Parser {
         if (!input.contains("/by")) {
             throw new BabeException("Please provide a deadline using /by!");
         }
-        String[] parts = input.split(" /by ");
-        if (parts.length != 2) {
+        String[] mainParts = input.split(" /by ");
+        if (mainParts.length != 2) {
             throw new BabeException("Please provide both a description and deadline!");
         }
-        String description = parts[0].substring(9).trim();
-        String byStr = parts[1].trim();
+
+        // Extract description and priority
+        String descriptionPart = mainParts[0].substring(9).trim();
+        String[] descAndPriority = descriptionPart.split(" /p ");
+        String description = descAndPriority[0].trim();
+        Task.Priority priority = descAndPriority.length > 1 ?
+                Task.Priority.fromLevel(Integer.parseInt(descAndPriority[1])) : Task.Priority.MEDIUM;
+
+        String byStr = mainParts[1].trim();
         if (description.isEmpty() || byStr.isEmpty()) {
             throw new BabeException("The description and deadline cannot be empty!");
         }
         assert !description.isEmpty() && !byStr.isEmpty() : "Description and deadline should not be empty"; // Ensure both are not empty
+
         try {
             LocalDateTime by = LocalDateTime.parse(byStr, INPUT_FORMATTER);
-            return new Deadline(description, by);
+            return new Deadline(description, by, priority);
         } catch (DateTimeParseException e) {
             throw new BabeException("Please enter date and time in the format: yyyy-MM-dd HHmm\n" +
                     "For example: 2024-01-30 1430 for January 30, 2024, 2:30 PM");
@@ -109,7 +130,7 @@ public class Parser {
     /**
      * Creates an Event task from the user input.
      *
-     * @param input The user input string containing the event description, start, and end time.
+     * @param input The user input string containing the event description, start time, end time, and optional priority.
      * @return An Event task object.
      * @throws BabeException If the description, start time, end time, or format is invalid.
      */
@@ -121,17 +142,26 @@ public class Parser {
         if (!input.contains("/from") || !input.contains("/to")) {
             throw new BabeException("Please provide event time using /from and /to!");
         }
-        String[] parts = input.split(" /from | /to ");
-        if (parts.length != 3) {
+        String[] timeParts = input.split(" /from | /to ");
+        if (timeParts.length != 3) {
             throw new BabeException("Please provide a description, start time, and end time!");
         }
-        String description = parts[0].substring(6).trim();
-        String startStr = parts[1].trim();
-        String endStr = parts[2].trim();
+
+        // Extract description and priority
+        String descriptionPart = timeParts[0].substring(6).trim();
+        String[] descAndPriority = descriptionPart.split(" /p ");
+        String description = descAndPriority[0].trim();
+        Task.Priority priority = descAndPriority.length > 1 ?
+                Task.Priority.fromLevel(Integer.parseInt(descAndPriority[1])) : Task.Priority.MEDIUM;
+
+        String startStr = timeParts[1].trim();
+        String endStr = timeParts[2].trim();
+
         if (description.isEmpty() || startStr.isEmpty() || endStr.isEmpty()) {
             throw new BabeException("The description, start time, and end time cannot be empty!");
         }
-        assert !description.isEmpty() && !startStr.isEmpty() && !endStr.isEmpty() : "Description, start time, and end time should not be empty"; // Ensure all are not empty
+        assert !description.isEmpty() && !startStr.isEmpty() && !endStr.isEmpty() :
+                "Description, start time, and end time should not be empty"; // Ensure all are not empty
 
         try {
             LocalDateTime start = LocalDateTime.parse(startStr, INPUT_FORMATTER);
@@ -141,7 +171,7 @@ public class Parser {
                 throw new BabeException("Event end time cannot be before start time!");
             }
 
-            return new Event(description, start, end);
+            return new Event(description, start, end, priority);
         } catch (DateTimeParseException e) {
             throw new BabeException("Please enter date and time in the format: yyyy-MM-dd HHmm\n" +
                     "For example: 2024-01-30 1430 for January 30, 2024, 2:30 PM");
@@ -160,13 +190,37 @@ public class Parser {
         try {
             String[] parts = input.split(" ");
             if (parts.length != 2) {
-                throw new BabeException("Please provide a babe.task number!");
+                throw new BabeException("Please provide a task number!");
             }
             int index = Integer.parseInt(parts[1]) - 1; // Convert to 0-based index
             assert index >= 0 : "Task index should be non-negative"; // Ensure index is valid
             return index;
         } catch (NumberFormatException e) {
-            throw new BabeException("Please provide a valid babe.task number!");
+            throw new BabeException("Please provide a valid task number!");
+        }
+    }
+
+    /**
+     * Extracts the priority level from the user input for the priority command.
+     *
+     * @param input The user input string containing the command, task index, and priority level.
+     * @return The priority level (1-3).
+     * @throws BabeException If the priority level is invalid or missing.
+     */
+    private static int getPriorityLevel(String input) throws BabeException {
+        assert input != null : "Input string cannot be null"; // Ensure input is not null
+        String[] parts = input.split(" ");
+        if (parts.length != 3) {
+            throw new BabeException("Please provide both task number and priority level (1-3)!");
+        }
+        try {
+            int level = Integer.parseInt(parts[2]);
+            if (level < 1 || level > 3) {
+                throw new BabeException("Priority level must be between 1 (High) and 3 (Low)!");
+            }
+            return level;
+        } catch (NumberFormatException e) {
+            throw new BabeException("Please provide a valid priority level (1-3)!");
         }
     }
 
